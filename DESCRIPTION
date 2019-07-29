@@ -1,0 +1,11 @@
+Package: FMtools
+Type: Package
+Title: Diverse funktion til R
+Version: 0.1.0
+Author: Andreas Groth Wos
+Maintainer: Andreas Groth Wos <andwo@fm.dk>
+Description: Beskrivelse
+    Står her
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true

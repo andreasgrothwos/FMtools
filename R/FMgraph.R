@@ -37,7 +37,7 @@ theme_fm <- function (base_size = 11, base_family = "") {
 					panel.background = element_rect(fill = "transparent",colour = NA),
 					plot.background = element_rect(fill = "transparent",colour = NA),
 					plot.margin = margin(15,0,0,0),
-					plot.title = element_text(margin = margin(0,0,0,-20), size = 6),
+					plot.title = element_text(margin = margin(0,0,0,-40), size = 6),
 					legend.background = element_rect(fill = "transparent",colour = NA),
 					line = element_line(size = linesize),
 					legend.position = "bottom",
@@ -55,7 +55,7 @@ theme_fm <- function (base_size = 11, base_family = "") {
 require(grid)
 
 ggplot(data = dat, aes(x = xvar, y = yvar/enhed, colour = gruppe)) + geom_line(size = linesize) + scale_color_manual(values = farver) + scale_y_continuous(labels=function(x) format(x, big.mark = ".", decimal.mark = ",", scientific = FALSE), expand = c(0,0), limits = c(y.nedre, y.oevre), breaks = seq(y.nedre, y.oevre,y.breaks), sec.axis = dup_axis()) +
-scale_x_continuous(expand = c(0,0)) + labs(y = yakse.navn, title = "Personer") + theme_fm() #+ grid.text("Second Title",y = unit(0.95,"npc"))
+scale_x_continuous(expand = c(0,0)) + labs(y = yakse.navn, title = "Personer") + theme_fm() #+ grid.text("Second Title")
 
 
 

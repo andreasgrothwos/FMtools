@@ -11,6 +11,24 @@ yvar  <- dat$total
 xvar <- dat$year
 gruppe <- dat$city
 
+sd(dat$total)
+require(grid)
+p<-ggplot(data = dat, aes(x = xvar, y = yvar/1e6, colour = gruppe)) +
+  geom_line() + theme_classic() +
+  theme(plot.margin = margin(30,0,0,0))+
+  annotation_custom(
+    grob = textGrob(label = "y-label", hjust = 0, vjust=-0.9,gp = gpar(cex = 1.0)),
+    ymin = max(yvar/1e6)+max(yvar/1e6)*.025,
+    xmin = min(xvar)-(0.009*min(xvar)))+
+	annotation_custom(
+    grob = textGrob(label = "y-label2", hjust = 1, vjust=-0.9,gp = gpar(cex = 1.0)),
+    ymin = max(yvar/1e6)+max(yvar/1e6)*.025,
+    xmin = max(xvar))+
+  labs(y = NULL)
+gt <- ggplot_gtable(ggplot_build(p))
+gt$layout$clip[gt$layout$name == "panel"] <- "off" #this lets you put stuff outside the margins
+grid.draw(gt)
+
 
 xakse.navn <- "x label"
 yakse.navn <- "y label"
@@ -24,6 +42,8 @@ farver <- c(farve1, farve2, farve3)
 linesize <- .25
 
 # NEXT STEP (21/08/2019): FIX MARGINER PÅ TEKST SÅ DET PASSER. SE THEME NEDENFOR
+# NEXT STEP (1/09/2019): FIX, så mest muligt håndteres i theme_fm funktionen.
+
 
 
 y.oevre <- 25*1e3
@@ -37,7 +57,7 @@ theme_fm <- function (base_size = 11, base_family = "") {
 					panel.background = element_rect(fill = "transparent",colour = NA),
 					plot.background = element_rect(fill = "transparent",colour = NA),
 					plot.margin = margin(15,0,0,0),
-					plot.title = element_text(margin = margin(0,0,0,-40), size = 6),
+					plot.title = element_blank(),
 					legend.background = element_rect(fill = "transparent",colour = NA),
 					line = element_line(size = linesize),
 					legend.position = "bottom",
@@ -54,8 +74,36 @@ theme_fm <- function (base_size = 11, base_family = "") {
 
 require(grid)
 
-ggplot(data = dat, aes(x = xvar, y = yvar/enhed, colour = gruppe)) + geom_line(size = linesize) + scale_color_manual(values = farver) + scale_y_continuous(labels=function(x) format(x, big.mark = ".", decimal.mark = ",", scientific = FALSE), expand = c(0,0), limits = c(y.nedre, y.oevre), breaks = seq(y.nedre, y.oevre,y.breaks), sec.axis = dup_axis()) +
-scale_x_continuous(expand = c(0,0)) + labs(y = yakse.navn, title = "Personer") + theme_fm() #+ grid.text("Second Title")
+d <- last_plot()
+
+
+fm_save <- function (plot = last_plot(), label = "akse-titel", navn = "", ...){
+	plot2 <- plot +
+ annotation_custom(
+	 grob = textGrob(label = label, hjust = 0, vjust=-0.9,gp = gpar(cex = 1.0, fontsize = 6)),
+	 ymin = max(yvar/1e6)+max(yvar/1e6)*.15,
+	 xmin = min(xvar)-15.5) +
+ annotation_custom(
+	 grob = textGrob(label = label, hjust = 1, vjust=-0.9,gp = gpar(cex = 1.0, fontsize = 6)),
+	 ymin = max(yvar/1e6)+max(yvar/1e6)*.15,
+	 xmin = max(xvar)+.5)
+
+gt <- ggplot_gtable(ggplot_build(plot2))
+gt$layout$clip[gt$layout$name == "panel"] <- "off" #for at skrive udenfor margin
+
+png(paste0(deparse(substitute(plot)),".png"),width = 5.95, height = 5.07, units = "cm", res = 300, bg = "transparent")
+grid.draw(gt)
+dev.off()
+grid.draw(gt)
+# ggsave("testin2.png", width = 5.95, height = 5.07, units = "cm", bg = "transparent")
+}
+
+
+
+fig2 <- ggplot(data = dat, aes(x = xvar, y = yvar/enhed, colour = gruppe)) + geom_line(size = linesize) + scale_color_manual(values = farver) + scale_y_continuous(labels=function(x) format(x, big.mark = ".", decimal.mark = ",", scientific = FALSE), expand = c(0,0), limits = c(y.nedre, y.oevre), breaks = seq(y.nedre, y.oevre,y.breaks), sec.axis = dup_axis()) +
+scale_x_continuous(expand = c(0,0)) + theme_fm()
+
+fm_save(label = "Pct.", plot = fig2) #+ grid.text("Second Title")
 
 
 

@@ -22,7 +22,7 @@ farver <- c(farve1, farve2, farve3)
 linesize <- .25
 
 # NEXT STEP (21/08/2019): FIX MARGINER PÅ TEKST SÅ DET PASSER. SE THEME NEDENFOR
-
+#test comment
 ggplot(data = dat, aes(x = xvar, y = yvar/enhed, colour = gruppe)) + geom_line(size = linesize) + scale_color_manual(values = farver) + scale_y_continuous(sec.axis = sec_axis(~.*1, name = yakse.navn)) + 
 											 labs(y = yakse.navn, x = "") + theme_classic() + 
 											 theme(text = element_text(size = 6, family = "sans"),
